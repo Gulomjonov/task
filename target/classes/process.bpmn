@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="checkClientProcess"
+                name="Check Client Process"
+                isExecutable="true"
+                camunda:historyTimeToLive="180">
+
+    <bpmn:startEvent id="StartEvent" name="Start" />
+    <bpmn:sequenceFlow id="f1" sourceRef="StartEvent" targetRef="ServiceTask_Check" />
+
+    <bpmn:serviceTask id="ServiceTask_Check"
+                      name="Check External"
+                      camunda:delegateExpression="${checkExternalDelegate}" />
+    <bpmn:sequenceFlow id="f2" sourceRef="ServiceTask_Check" targetRef="Gateway1" />
+
+    <bpmn:exclusiveGateway id="Gateway1" />
+
+    <bpmn:sequenceFlow id="toSuccess" sourceRef="Gateway1" targetRef="EndSuccess">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+        <![CDATA[${externalStatus == 'SUCCESS'}]]>
+      </bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="toError" sourceRef="Gateway1" targetRef="EndError">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+        <![CDATA[${externalStatus != 'SUCCESS'}]]>
+      </bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:endEvent id="EndSuccess" name="Success" />
+    <bpmn:endEvent id="EndError" name="Error" />
+
+  </bpmn:process>
+</bpmn:definitions>

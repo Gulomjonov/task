@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/camunda}
+    username: ${SPRING_DATASOURCE_USERNAME:camunda}
+    password: ${SPRING_DATASOURCE_PASSWORD:camunda}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+camunda:
+  bpm:
+    history-level: full
+    database:
+      type: postgres
+
+camunda.bpm.admin-user:
+  id: admin
+  password: admin

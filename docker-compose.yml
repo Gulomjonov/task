@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: camunda
+      POSTGRES_USER: camunda
+      POSTGRES_PASSWORD: camunda
+    ports:
+      - "5000:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  camunda:
+    image: camunda/camunda-bpm-platform:7.22.0
+    environment:
+      - DB_DRIVER=org.postgresql.Driver
+      - DB_URL=jdbc:postgresql://db:5432/camunda
+      - DB_USERNAME=camunda
+      - DB_PASSWORD=camunda
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  task:
+    build:
+      context: .
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/camunda
+      - SPRING_DATASOURCE_USERNAME=camunda
+      - SPRING_DATASOURCE_PASSWORD=camunda
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+      - camunda
+
+volumes:
+  db-data:

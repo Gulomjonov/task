@@ -1,0 +1,6 @@
+uz\sap\task\controller\ApplyController.class
+uz\sap\task\external\ExternalStubController.class
+uz\sap\task\repository\AuditLogRepository.class
+uz\sap\task\model\AuditLog.class
+uz\sap\task\Application.class
+uz\sap\task\delegate\CheckExternalDelegate.class
